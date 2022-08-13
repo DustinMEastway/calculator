@@ -6,24 +6,34 @@ import { NumberButton } from './number-button';
 import { Operation, OperationButton, OperationCallback } from './operation-button';
 import './calculator.css';
 
-const validInputRegex = /[^0-9.]+/g;
+/** Invalid values to remove from the input. */
+const invalidInputRegex = /[^0-9.]+/g;
 
+/** Significant digits to round to. This helps with JavaScript's math issues when doing stuff like '1.2/.1'. */
+const significantDigits = 13;
+const roundValue = (x: number) => {
+  const significantValue = Math.pow(10, significantDigits);
+  return Math.round(x * significantValue) / significantValue;
+}
+
+/** Performs the provided operation on the two values (e.g. x - y). */
 export function performOperation(operation: Operation, x: number, y: number): number {
   switch (operation) {
     case Operation.Add:
-      return x + y;
+      return roundValue(x + y);
     case Operation.Divide:
-      return x / y;
+      return roundValue(x / y);
     case Operation.Multiply:
-      return x * y;
+      return roundValue(x * y);
     case Operation.Subtract:
-      return x - y;
+      return roundValue(x - y);
     default:
       const invalidOperation: never = operation;
       throw new Error(`Invalid operation '${invalidOperation}'.`);
   }
 }
 
+/** Calculator with the basic four operations built into it. */
 export const Calculator: FC = () => {
   const [input, setInput] = useState<string>('');
   const [storedInput, setStoredInput] = useState<number | null>(null);
@@ -49,7 +59,7 @@ export const Calculator: FC = () => {
   return <Container className='calculator'>
     <Input
       className='calculator-input'
-      onChange={(e) => setInput(e.currentTarget.value.replace(validInputRegex, ''))}
+      onChange={(e) => setInput(e.currentTarget.value.replace(invalidInputRegex, ''))}
       value={input}
     />
     <Container>
