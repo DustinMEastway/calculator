@@ -1,0 +1,16 @@
+.calculator {
+  padding: 0 1em;
+  width: calc(100% - 2em);
+}
+
+.calculator-input {
+  text-align: right;
+  width: 100%;
+}
+
+
+@media only screen and (min-width: 600px) {
+  .calculator {
+    width: 600px;
+  }
+}
